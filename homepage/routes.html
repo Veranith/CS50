@@ -1,32 +1,34 @@
 <!DOCTYPE html>
 
 <html lang="en">
-    <head>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
-        <link href="styles.css" rel="stylesheet">
-        <title>My Webpage</title>
-    </head>
-    <body onload="closeNav()">
-        <div>
-            <!-- Left side menu -->
-            <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-            <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="./index.html">Main</a>
-                <a href="./clients.html">Clients</a>
-                <a href="./kitchen.html">Kitchen</a>
-                <a href="./routes.html">Routes</a>
-            </div> 
-            <!-- Right side main -->
-            <div id="rightMain">
-                <!-- Header -->
-                <header class="border-bottom">
-                    <button id="menuButton" style="visibility: hidden;" type="button" class="btn btn-primary float-left" onclick="openNav()">Menu</button>
-                    <h2 class="text-center">Site header</h2>
-                </header>
-                <!-- Main area -->
-                <main class="mx-5 my-3">
-                    <table class="table table-bordered table-hover route-1">
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>MoW - Routes</title>
+</head>
+<body onload="closeNav()">
+    <!-- Header -->
+    <!-- https://www.w3schools.com/howto/howto_css_button_on_image.asp -->
+    <header class="myHeader">
+        <div><img src="https://www.mealsonwheelsofcheyenne.com/wp-content/uploads/2016/06/headerD2.jpg" class="img-fluid" ></div>
+        <button id="menuButton" type="button" class="btn btn-primary menuButton shadow-none" onclick="toggleNav()">&#9776</button>
+    </header>
+
+    <main class="row">
+        <!-- Left side menu -->
+        <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+        <div id="sideMenu" class="sidenav">
+            <a href="./index.html">Main</a>
+            <a href="./clients.html">Clients</a>
+            <a href="./kitchen.html">Kitchen</a>
+            <a href="./routes.html">Routes</a>
+        </div> 
+        <!-- Right side main -->
+        <div id="rightMain" style="width: 100%;">
+            <!-- Main area -->
+            <div class="mx-5 my-4">
+                <!-- <div class="row justify-content-center"> -->
+                    <table class="table table-bordered ">
                         <thead>
                             <th scope="col">Name</th>
                             <th scope="col">Address</th>
@@ -45,39 +47,44 @@
                             <tr>
                                 <td colspan=5>Dog is very friendly</td>  
                             </tr>
+                            <tr>
+                                <td rowspan=2>Flintstone, Wilma</td>
+                                <td>1313 Cobblestone Way</td>
+                                <td>555-555-0002</td>
+                                <td>LO SALT</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td colspan=5>Use side door</td>  
+                            </tr>
+                            <tr>
+                                <td rowspan=2>Rubble, Barney</td>
+                                <td>375 Cave Stone Road</td>
+                                <td>555-555-0003</td>
+                                <td>BLAND</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td colspan=5>HOUSE # IS ON MAILBOX</td>  
+                            </tr>
+                            <tr>
+                                <td rowspan=2>Rubble, Betty</td>
+                                <td>375 Cave Stone Road</td>
+                                <td>555-555-0004</td>
+                                <td>GLUTEN FREE</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td colspan=5>UPSTAIRS. KNOCK & WAIT</td>  
+                            </tr>
                         </tbody>
-                        <tr>
-                            <td rowspan=2>Flintstone, Wilma</td>
-                            <td>1313 Cobblestone Way</td>
-                            <td>555-555-0002</td>
-                            <td>LO SALT</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td colspan=5>Use side door</td>  
-                        </tr>
-
                     </table>
-                    
-                </main>
-                <!-- <footer class="border-top mt-3">Footer</footer> -->
+                <!-- </div>  -->
             </div>
         </div>
-        
-    <script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "15%";
-        document.getElementById("rightMain").style.marginLeft = "15%";
-        //document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-        document.getElementById("menuButton").style.visibility = "hidden";
-        }
+    </main>
 
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("rightMain").style.marginLeft = "0";
-        //document.body.style.backgroundColor = "white";
-        document.getElementById("menuButton").style.visibility = "visible";
-    }
-    </script>
-    </body>
+<script src="./scripts.js"></script>
+
+</body>
 </html>

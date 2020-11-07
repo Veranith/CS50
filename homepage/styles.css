@@ -1,45 +1,44 @@
 .sidenav {
     height: 100%;
     width: 15%;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #111;
+    position: absolute;
+    background-color: rgb(38, 41, 96);
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
+    padding-top: 0px;
 }
 
 .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #818181;
+    color: rgb(221, 212, 170);
     display: block;
     transition: 0.3s;
 }
 
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-}
 
 #rightMain {
     margin-left: 15%;
 }
 
-.route-1 {
-    visibility: visible;
+/* https://www.w3schools.com/howto/howto_css_button_on_image.asp */
+.myHeader {
+    position: relative;
 }
 
-.route-2 {
-    visibility: hidden;
+.myHeader img {
+    width: 100%;
+    height: auto;
 }
 
-.route-3 {
-    visibility: hidden;
+.myHeader .menuButton {
+    position: absolute;
+    left: 1%;
+    top: 50%;
+    transform: translate(0, -50%);
+    background-color: rgb(38, 41, 96);
+    width: 10%;
+    height: 80%;
+    font-size: larger;
 }

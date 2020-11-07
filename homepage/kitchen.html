@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 
 <html lang="en">
-    <head>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
-        <link href="styles.css" rel="stylesheet">
-        <title>My Webpage</title>
-    </head>
-    <body onload="closeNav()">
-        <div>
-            <!-- Left side menu -->
-            <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-            <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="./index.html">Main</a>
-                <a href="./clients.html">Clients</a>
-                <a href="./kitchen.html">Kitchen</a>
-                <a href="./routes.html">Routes</a>
-            </div> 
-            <!-- Right side main -->
-            <div id="rightMain">
-                <!-- Header -->
-                <header class="border-bottom">
-                    <button id="menuButton" style="visibility: hidden;" type="button" class="btn btn-primary float-left" onclick="openNav()">Menu</button>
-                    <h2 class="text-center">Site header</h2>
-                </header>
-                <!-- Main area -->
-                <main class="mx-5 my-3">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <th scope="col">Name</th>
-                            <th scope="col">Diet</th>
-                            <th scope="col">Meal</th>
-                            <th scope="col">Route</th>
-                        </thead>
-                        <tbody class="route-1">
-                            <tr>
-                                <td rowspan="2">Flintstone, Fred</td>
-                                <td>DIEB</td>
-                                <td>Hot Meal</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">LARGE PROTEIN PORTION, NO ORANGE JUICE</td>  
-                            </tr>
-                        </tbody>
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>MoW - Kitchen</title>
+</head>
+<body onload="closeNav()">
+    <!-- Header -->
+    <!-- https://www.w3schools.com/howto/howto_css_button_on_image.asp -->
+    <header class="myHeader">
+        <div><img src="https://www.mealsonwheelsofcheyenne.com/wp-content/uploads/2016/06/headerD2.jpg" class="img-fluid" ></div>
+        <button id="menuButton" type="button" class="btn btn-primary menuButton shadow-none" onclick="toggleNav()">&#9776</button>
+    </header>
+
+    <main class="row">
+        <!-- Left side menu -->
+        <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+        <div id="sideMenu" class="sidenav">
+            <a href="./index.html">Main</a>
+            <a href="./clients.html">Clients</a>
+            <a href="./kitchen.html">Kitchen</a>
+            <a href="./routes.html">Routes</a>
+        </div> 
+        <!-- Right side main -->
+        <div id="rightMain" style="width: 100%;">
+            <!-- Main area -->
+            <div class="mx-5 my-3">
+                <table class="table table-bordered">
+                    <thead>
+                        <th scope="col">Name</th>
+                        <th scope="col">Diet</th>
+                        <th scope="col">Meal</th>
+                        <th scope="col">Route</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2">Flintstone, Fred</td>
+                            <td>DIEB</td>
+                            <td>Hot Meal</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">LARGE PROTEIN PORTION, NO ORANGE JUICE</td>  
+                        </tr>
                         <tr>
                             <td rowspan=2>Flintstone, Wilma</td>
                             <td>LO SALT</td>
@@ -53,28 +53,33 @@
                         <tr>
                             <td colspan="3">NO DARK LEAFY GREENS/ORANGES</td>  
                         </tr>
-
-                    </table>
-                    
-                </main>
-                <!-- <footer class="border-top mt-3">Footer</footer> -->
+                        <tr>
+                            <td rowspan=2>Rubble, Barney</td>
+                            <td>BLAND</td>
+                            <td>Hot Meal</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">ALLERGY TO WALNUTS/PECANS, GRIND MEAT</td>  
+                        </tr>
+                        <tr>
+                            <td rowspan=2>Rubble, Betty</td>
+                            <td>GLUTEN FREE</td>
+                            <td>Hot Meal</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">NO FISH</td>  
+                        </tr>
+                    </tbody>
+                </table>
+                
             </div>
+            
         </div>
-        
-    <script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "15%";
-        document.getElementById("rightMain").style.marginLeft = "15%";
-        //document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-        document.getElementById("menuButton").style.visibility = "hidden";
-        }
+    </main>
 
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("rightMain").style.marginLeft = "0";
-        //document.body.style.backgroundColor = "white";
-        document.getElementById("menuButton").style.visibility = "visible";
-    }
-    </script>
-    </body>
+<script src="./scripts.js"></script>
+
+</body>
 </html>

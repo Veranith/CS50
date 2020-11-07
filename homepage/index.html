@@ -1,51 +1,57 @@
 <!DOCTYPE html>
 
 <html lang="en">
-    <head>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
-        <link href="styles.css" rel="stylesheet">
-        <title>My Webpage</title>
-    </head>
-    <body>
-        <div>
-            <!-- Left side menu -->
-            <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
-            <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="./index.html">Main</a>
-                <a href="./clients.html">Clients</a>
-                <a href="./kitchen.html">Kitchen</a>
-                <a href="./routes.html">Routes</a>
-            </div> 
-            <!-- Right side main -->
-            <div id="rightMain">
-                <!-- Header -->
-                <header class="border-bottom">
-                    <button id="menuButton" style="visibility: hidden;" type="button" class="btn btn-primary float-left" onclick="openNav()">Menu</button>
-                    <h2 class="text-center">Site header</h2>
-                </header>
-                <!-- Main area -->
-                <main class="my-3">
-                    Content here
-                </main>
-                <!-- <footer class="border-top mt-3">Footer</footer> -->
-            </div>
-        </div>
-        
-    <script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "15%";
-        document.getElementById("rightMain").style.marginLeft = "15%";
-        //document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-        document.getElementById("menuButton").style.visibility = "hidden";
-        }
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>MoW</title>
+</head>
+<body>
+    <!-- Header -->
+    <!-- https://www.w3schools.com/howto/howto_css_button_on_image.asp -->
+    <header class="myHeader">
+        <div><img src="https://www.mealsonwheelsofcheyenne.com/wp-content/uploads/2016/06/headerD2.jpg" class="img-fluid" ></div>
+        <button id="menuButton" type="button" class="btn btn-primary menuButton shadow-none" onclick="toggleNav()">&#9776</button>
+    </header>
 
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("rightMain").style.marginLeft = "0";
-        //document.body.style.backgroundColor = "white";
-        document.getElementById("menuButton").style.visibility = "visible";
-    }
-    </script>
-    </body>
+    <main class="row">
+        <!-- Left side menu -->
+        <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+        <div id="sideMenu" class="sidenav">
+            <a href="./index.html">Main</a>
+            <a href="./clients.html">Clients</a>
+            <a href="./kitchen.html">Kitchen</a>
+            <a href="./routes.html">Routes</a>
+        </div> 
+        <!-- Right side main -->
+        <div id="rightMain">
+            <!-- Main area -->
+            <div class="my-4 container">
+                <div class="row justify-content-center">
+                    <h1 class="text-center">Meals on Wheels Reports</h1>
+                    <table class="table table-bordered col-8 my-4">
+                        <tbody>
+                            <tr>
+                                <th>Clients</th>
+                                <td>Used to view infomation on a client</td>
+                            </tr>
+                            <tr>
+                                <th>Kitchen</th>
+                                <td>Displays the kitchen report used to prepare specific meals for each client</td>
+                            </tr>
+                            <tr>
+                                <th>Routes</th>
+                                <td>Displays the infromation needed by drivers to deliver means for each route</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>        
+        </div>
+    </main>
+    
+<script src="./scripts.js"></script>
+
+</body>
 </html>
