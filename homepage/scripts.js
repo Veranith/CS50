@@ -5,7 +5,6 @@ function openNav() {
     // if (!location.pathname.includes("index.html")) {
     //     document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
     // }
-    // document.getElementById("menuButton").style.visibility = "hidden";
     }
 
 function closeNav() {
@@ -14,7 +13,6 @@ function closeNav() {
     // if (!location.pathname.includes("index.html")) {
     //     document.body.style.backgroundColor = "white";
     // }
-    // document.getElementById("menuButton").style.visibility = "visible";
 }
 
 function toggleNav(){
