@@ -6,7 +6,7 @@
         <link href="styles.css" rel="stylesheet">
         <title>My Webpage</title>
     </head>
-    <body>
+    <body onload="closeNav()">
         <div>
             <!-- Left side menu -->
             <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
@@ -25,8 +25,40 @@
                     <h2 class="text-center">Site header</h2>
                 </header>
                 <!-- Main area -->
-                <main class="my-3">
-                    Content here
+                <main class="mx-5 my-3">
+                    <table class="table table-bordered table-hover route-1">
+                        <thead>
+                            <th scope="col">Name</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Diet</th>
+                            <th scope="col">Route</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan=2>Flintstone, Fred</td>
+                                <td>345 Cave Stone Road</td>
+                                <td>555-555-0001</td>
+                                <td>DIAB</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td colspan=5>Dog is very friendly</td>  
+                            </tr>
+                        </tbody>
+                        <tr>
+                            <td rowspan=2>Flintstone, Wilma</td>
+                            <td>1313 Cobblestone Way</td>
+                            <td>555-555-0002</td>
+                            <td>LO SALT</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td colspan=5>Use side door</td>  
+                        </tr>
+
+                    </table>
+                    
                 </main>
                 <!-- <footer class="border-top mt-3">Footer</footer> -->
             </div>

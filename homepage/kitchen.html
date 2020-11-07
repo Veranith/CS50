@@ -6,7 +6,7 @@
         <link href="styles.css" rel="stylesheet">
         <title>My Webpage</title>
     </head>
-    <body>
+    <body onload="closeNav()">
         <div>
             <!-- Left side menu -->
             <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
@@ -25,8 +25,37 @@
                     <h2 class="text-center">Site header</h2>
                 </header>
                 <!-- Main area -->
-                <main class="my-3">
-                    Content here
+                <main class="mx-5 my-3">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <th scope="col">Name</th>
+                            <th scope="col">Diet</th>
+                            <th scope="col">Meal</th>
+                            <th scope="col">Route</th>
+                        </thead>
+                        <tbody class="route-1">
+                            <tr>
+                                <td rowspan="2">Flintstone, Fred</td>
+                                <td>DIEB</td>
+                                <td>Hot Meal</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">LARGE PROTEIN PORTION, NO ORANGE JUICE</td>  
+                            </tr>
+                        </tbody>
+                        <tr>
+                            <td rowspan=2>Flintstone, Wilma</td>
+                            <td>LO SALT</td>
+                            <td>Hot Meal</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">NO DARK LEAFY GREENS/ORANGES</td>  
+                        </tr>
+
+                    </table>
+                    
                 </main>
                 <!-- <footer class="border-top mt-3">Footer</footer> -->
             </div>
