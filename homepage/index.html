@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>MoW</title>
+</head>
+<body>
+    <!-- Header -->
+    <!-- https://www.w3schools.com/howto/howto_css_button_on_image.asp -->
+    <header class="myHeader">
+        <div><img src="https://www.mealsonwheelsofcheyenne.com/wp-content/uploads/2016/06/headerD2.jpg" class="img-fluid" alt="Meals on Wheels"></div>
+        <button id="menuButton" type="button" class="btn btn-primary menuButton shadow-none" onclick="toggleNav()">&#9776;</button>
+    </header>
+
+    <main class="row">
+        <!-- Left side menu -->
+        <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+        <div id="sideMenu" class="sidenav">
+            <a href="./index.html">Main</a>
+            <a href="./clients.html">Clients</a>
+            <a href="./kitchen.html">Kitchen</a>
+            <a href="./routes.html">Routes</a>
+        </div> 
+        <!-- Right side main -->
+        <div id="rightMain">
+            <!-- Main area -->
+            <div class="my-4 container">
+                <div class="row justify-content-center">
+                    <h1 class="text-center">Meals on Wheels Reports</h1>
+                    <table class="table table-bordered col-8 my-4">
+                        <tbody>
+                            <tr>
+                                <th>Clients</th>
+                                <td>Used to view infomation on a client</td>
+                            </tr>
+                            <tr>
+                                <th>Kitchen</th>
+                                <td>Displays the kitchen report used to prepare specific meals for each client</td>
+                            </tr>
+                            <tr>
+                                <th>Routes</th>
+                                <td>Displays the infromation needed by drivers to deliver means for each route</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>        
+        </div>
+    </main>
+    
+<script src="./scripts.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>MoW - Clients</title>
+</head>
+<body onload="closeNav()">
+    <!-- Header -->
+    <!-- https://www.w3schools.com/howto/howto_css_button_on_image.asp -->
+    <header class="myHeader">
+        <div><img src="https://www.mealsonwheelsofcheyenne.com/wp-content/uploads/2016/06/headerD2.jpg" class="img-fluid" alt="Meals on Wheels"></div>
+        <button id="menuButton" type="button" class="btn btn-primary menuButton shadow-none" onclick="toggleNav()">&#9776;</button>
+    </header>
+
+    <main class="row">
+        <!-- Left side menu -->
+        <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+        <div id="sideMenu" class="sidenav">
+            <a href="./index.html">Main</a>
+            <a href="./clients.html">Clients</a>
+            <a href="./kitchen.html">Kitchen</a>
+            <a href="./routes.html">Routes</a>
+        </div> 
+        <!-- Right side main -->
+        <div id="rightMain" style="width: 100%;">
+            <!-- Main area -->
+            <div class="mx-5 my-3">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <td>Flintstone, Fred</td>
+                        </tr>
+                        <tr>
+                            <th>Client #</th>
+                            <td>123</td>
+                        </tr>
+                        <tr>
+                            <th>Address</th>
+                            <td>345 Cave Stone Road</td>
+                        </tr>
+                        <tr>
+                            <th>Phone</th>
+                            <td>555-555-0001</td>
+                        </tr>
+                        <tr>
+                            <th>Diet</th>
+                            <td>DIAB</td>
+                        </tr>
+                        <tr>
+                            <th>Delivery Instructions</th>
+                            <td>Dog is very friendly</td>
+                        </tr>
+                        <tr>
+                            <th>Kitchen Instructions</th>
+                            <td>LARGE PROTEIN PORTION, NO ORANGE JUICE</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+    </main>
+
+<script src="./scripts.js"></script>
+    
+</body>
+</html>
