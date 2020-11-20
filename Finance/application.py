@@ -1,13 +1,13 @@
 import os
 
 from cs50 import SQL
-from flask import Flask, flash, jsonify, redirect, render_template, request, session
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, lookup, usd    # type: ignore
 
 # Configure application
 app = Flask(__name__)
@@ -82,16 +82,20 @@ def login():
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = :username",
                           username=request.form.get("username"))
-
+        print("Hash: " + rows[0]["hash"])
+        mypassword = request.form.get("password")
+        print("Pass: " + mypassword)
+        print(check_password_hash(rows[0]["hash"], mypassword))
         # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], mypassword):
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
-
-        # Redirect user to home page
-        return redirect("/")
+        
+        # Redirect user to home page and display successful login message
+        flash('Successfully logged in!', 'success')
+        return redirect(url_for('index'))
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -119,7 +123,40 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-    return apology("TODO")
+    
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            return apology("must provide username", 403)
+
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            return apology("must provide password", 403)
+
+        elif not (request.form.get("password") == request.form.get("confirmation")):
+            return apology("passwords do not match", 403)
+
+        # Ensure username is not already taken
+        elif len(db.execute("SELECT * FROM users WHERE username = :username",
+                          username=request.form.get("username"))) > 0:
+            return apology("username already taken", 403)
+        
+        db.execute("INSERT INTO users (username, hash) VALUES(:username,:hash)",
+                        username=request.form.get("username"),
+                        hash=generate_password_hash(request.form.get("password")))
+        
+        # not working, todo
+        flash('Account successfully created!', 'success')
+
+        # Redirect user to home page
+        return redirect(url_for("login"))
+
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("register.html")
 
 
 @app.route("/sell", methods=["GET", "POST"])
