@@ -11,6 +11,7 @@ from helpers import apology, login_required, lookup, usd    # type: ignore
 
 # Configure application
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '4E3D0C88F9B04938DC89C27C0B4271E53'
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -44,13 +45,45 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return apology("TODO")
+    cash = usd(db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])[0]['cash'])
+    return apology(cash)
 
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
 def buy():
     """Buy shares of stock"""
+    if request.method == "POST":
+        if not request.form.get("symbol"):
+            return apology("must provide a symbol", 403)
+
+        shares = request.form.get("shares", type=int)
+        # Verify shares is an int >= 1
+        if not (isinstance(shares, int) and shares >= 1):
+            return apology("must provide a valid quantity of shares to buy", 403)
+        
+        quote = lookup(request.form.get("symbol"))
+        if quote is None:
+            return apology("Symbol doesn't exist", 403)
+        
+        cash = float(db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])[0]['cash'])
+        
+
+        if shares * quote["price"] > cash:
+            return apology("You don't have enough cash to make this purchase", 403)
+        
+        # subract purchase from cash in DB
+        db.execute("UPDATE users SET cash=:cash WHERE id = :id",
+                        cash=cash - (shares * quote["price"]),
+                        id=session["user_id"])
+
+        
+        return redirect(url_for("index"))
+
+    else:
+        return render_template("buy.html")
+
+
     return apology("TODO")
 
 
@@ -186,3 +219,7 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
+
+if __name__ == '__main__':
+    app.run(debug=True) 
