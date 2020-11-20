@@ -82,12 +82,9 @@ def login():
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = :username",
                           username=request.form.get("username"))
-        print("Hash: " + rows[0]["hash"])
-        mypassword = request.form.get("password")
-        print("Pass: " + mypassword)
-        print(check_password_hash(rows[0]["hash"], mypassword))
+
         # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], mypassword):
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
@@ -117,7 +114,17 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
-    return apology("TODO")
+
+    if request.method == "POST":
+        if not request.form.get("symbol"):
+            return apology("must provide a symbol", 403)
+        
+        quote = lookup(request.form.get("symbol"))
+
+        return render_template("quoted.html", quote=quote)
+
+    else:
+        return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
