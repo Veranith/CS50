@@ -24,6 +24,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 # Custom filter
 app.jinja_env.filters["usd"] = usd
 
@@ -45,8 +46,22 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    cash = usd(db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])[0]['cash'])
-    return apology(cash)
+    cash = db.execute("SELECT cash FROM users WHERE id = :id;", id=session["user_id"])[0]['cash']
+
+    stocks = db.execute("SELECT symbol, sum(qty) AS shares FROM transactions "
+                        "WHERE user_id = :user_id GROUP BY symbol ORDER BY symbol;", 
+                        user_id=session["user_id"])
+    
+    total = cash
+    print("Stocks: ", stocks)
+    for stock in stocks:
+        stock.update(lookup(stock['symbol']))
+        print("Stock: ", stock)
+        total += (stock['price'] * stock['shares'])
+        print("total: ", total)
+
+    # return apology("sorry")
+    return render_template("index.html", stocks=stocks, cash=usd(cash), total=usd(total))
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -54,12 +69,13 @@ def index():
 def buy():
     """Buy shares of stock"""
     if request.method == "POST":
+
         symbol = request.form.get("symbol")
         if not symbol:
             return apology("must provide a symbol", 403)
 
-        shares = request.form.get("shares", type=int)
         # Verify shares is an int >= 1
+        shares = request.form.get("shares", type=int)
         if not (isinstance(shares, int) and shares >= 1):
             return apology("must provide a valid quantity of shares to buy", 403)
         
@@ -67,52 +83,33 @@ def buy():
         if quote is None:
             return apology("Symbol doesn't exist", 403)
         
-        cash = float(db.execute("SELECT * FROM users WHERE id = :id", id=session["user_id"])[0]['cash'])
+        cash = float(db.execute("SELECT * FROM users WHERE id = :id;", 
+                                id=session["user_id"])[0]['cash'])
         
-
+        # Check to make sure there is available cash for transaction
         if shares * quote["price"] > cash:
             return apology("You don't have enough cash to make this purchase", 403)
         
-        # Add shares to user
-        rows = db.execute("SELECT * FROM shares WHERE user_id = :user_id and symbol = :symbol",
-                          user_id = session['user_id'],
-                          symbol = symbol
-                          )
-        if len(rows) == 0:
-            db.execute("INSERT INTO shares (user_id, symbol, share_qty) VALUES(:user_id,:symbol,:share_qty)",
-                        user_id = session['user_id'],
-                        symbol = symbol,
-                        share_qty = shares
-                        )
-        else:
-            new_shares = shares + rows[0]["share_qty"]
-            db.execute("UPDATE shares SET share_qty = :share_qty WHERE id = :share_id",
-                        share_id = rows[0]['id'],
-                        share_qty = new_shares
-                        )
-
-        # Add transaction history
-        db.execute("INSERT INTO history (user_id, symbol, hist_qty, hist_date)" \
-                        "VALUES(:user_id, :symbol, :hist_qty, :hist_date)",
-                        user_id = session['user_id'],
-                        symbol = symbol,
-                        hist_qty = shares,
-                        hist_date = datetime.now()
-        )
+        # Add transaction
+        db.execute("INSERT INTO transactions (user_id, symbol, qty, price, date)"
+                   "VALUES(:user_id, :symbol, :qty, :price, :date);",
+                   user_id=session['user_id'],
+                   symbol=symbol,
+                   qty=shares,
+                   price=quote["price"],
+                   date=datetime.now()
+                   )
 
         # subract purchase from cash in DB
-        db.execute("UPDATE users SET cash=:cash WHERE id = :id",
-                        cash=cash - (shares * quote["price"]),
-                        id=session["user_id"])
-
+        db.execute("UPDATE users SET cash=:cash WHERE id = :id;",
+                   cash=round(cash - (shares * quote["price"]), 2),
+                   id=session["user_id"])
         
+        flash("Successfully purchased.", "success")
         return redirect(url_for("index"))
 
     else:
         return render_template("buy.html")
-
-
-    return apology("TODO")
 
 
 @app.route("/history")
@@ -141,7 +138,7 @@ def login():
             return apology("must provide password", 403)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
+        rows = db.execute("SELECT * FROM users WHERE username = :username;",
                           username=request.form.get("username"))
 
         # Ensure username exists and password is correct
@@ -210,20 +207,19 @@ def register():
             return apology("passwords do not match", 403)
 
         # Ensure username is not already taken
-        elif len(db.execute("SELECT * FROM users WHERE username = :username",
-                          username=request.form.get("username"))) > 0:
+        elif len(db.execute("SELECT * FROM users WHERE username = :username;",
+                            username=request.form.get("username"))) > 0:
             return apology("username already taken", 403)
         
-        db.execute("INSERT INTO users (username, hash) VALUES(:username,:hash)",
-                        username=request.form.get("username"),
-                        hash=generate_password_hash(request.form.get("password")))
+        db.execute("INSERT INTO users (username, hash) VALUES(:username,:hash);",
+                   username=request.form.get("username"),
+                   hash=generate_password_hash(request.form.get("password")))
         
         # not working, todo
         flash('Account successfully created!', 'success')
 
         # Redirect user to home page
         return redirect(url_for("login"))
-
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
