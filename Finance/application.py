@@ -53,12 +53,11 @@ def index():
                         user_id=session["user_id"])
     
     total = cash
-    print("Stocks: ", stocks)
+    
     for stock in stocks:
         stock.update(lookup(stock['symbol']))
-        print("Stock: ", stock)
         total += (stock['price'] * stock['shares'])
-        print("total: ", total)
+    
 
     # return apology("sorry")
     return render_template("index.html", stocks=stocks, cash=usd(cash), total=usd(total))
@@ -230,8 +229,58 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
 
+    if request.method == "POST":
+
+        symbol = request.form.get("symbol")
+        if not symbol:
+            return apology("must provide a symbol", 403)
+
+        # Verify shares is an int >= 1
+        sellShares = request.form.get("shares", type=int)
+        if not (isinstance(sellShares, int) and sellShares >= 1):
+            return apology("must provide a valid quantity of shares to buy", 403)
+
+        # Get and validate shares from DB
+        rows = db.execute("SELECT sum(qty) AS shares FROM transactions "
+                        "WHERE user_id = :user_id AND symbol = :symbol GROUP BY symbol;", 
+                        user_id=session["user_id"],
+                        symbol= symbol
+                        )
+        if len(rows) != 1:
+            return apology("You don't own this stock.", 403)
+        ownedShares = rows[0]['shares']
+
+        # Check to make sure there is available shares for transaction
+        if not (ownedShares >= sellShares and isinstance(sellShares, int)):
+            return apology("You don't own this many shares.", 403)
+
+        # get current quote for this symbol
+        quote = lookup(request.form.get("symbol"))
+        if quote is None:
+            return apology("Symbol doesn't exist", 403)
+        
+        # Add transaction
+        db.execute("INSERT INTO transactions (user_id, symbol, qty, price, date)"
+                   "VALUES(:user_id, :symbol, :qty, :price, :date);",
+                   user_id=session['user_id'],
+                   symbol=symbol,
+                   qty=(sellShares * -1),
+                   price=quote["price"],
+                   date=datetime.now()
+                   )
+
+        # add purchase to cash in DB
+        cash = db.execute("SELECT cash FROM users WHERE id = :id;", id=session["user_id"])[0]['cash']
+        db.execute("UPDATE users SET cash=:cash WHERE id = :id;",
+                   cash=round(cash + (sellShares * quote["price"]), 2),
+                   id=session["user_id"])
+        
+        flash("Successfully sold shares.", "success")
+        return redirect(url_for("index"))
+
+    else:
+        return render_template("sell.html")
 
 def errorhandler(e):
     """Handle error"""
