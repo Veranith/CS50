@@ -1,5 +1,5 @@
 import os
-
+from datetime import datetime
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
@@ -54,7 +54,8 @@ def index():
 def buy():
     """Buy shares of stock"""
     if request.method == "POST":
-        if not request.form.get("symbol"):
+        symbol = request.form.get("symbol")
+        if not symbol:
             return apology("must provide a symbol", 403)
 
         shares = request.form.get("shares", type=int)
@@ -72,6 +73,33 @@ def buy():
         if shares * quote["price"] > cash:
             return apology("You don't have enough cash to make this purchase", 403)
         
+        # Add shares to user
+        rows = db.execute("SELECT * FROM shares WHERE user_id = :user_id and symbol = :symbol",
+                          user_id = session['user_id'],
+                          symbol = symbol
+                          )
+        if len(rows) == 0:
+            db.execute("INSERT INTO shares (user_id, symbol, share_qty) VALUES(:user_id,:symbol,:share_qty)",
+                        user_id = session['user_id'],
+                        symbol = symbol,
+                        share_qty = shares
+                        )
+        else:
+            new_shares = shares + rows[0]["share_qty"]
+            db.execute("UPDATE shares SET share_qty = :share_qty WHERE id = :share_id",
+                        share_id = rows[0]['id'],
+                        share_qty = new_shares
+                        )
+
+        # Add transaction history
+        db.execute("INSERT INTO history (user_id, symbol, hist_qty, hist_date)" \
+                        "VALUES(:user_id, :symbol, :hist_qty, :hist_date)",
+                        user_id = session['user_id'],
+                        symbol = symbol,
+                        hist_qty = shares,
+                        hist_date = datetime.now()
+        )
+
         # subract purchase from cash in DB
         db.execute("UPDATE users SET cash=:cash WHERE id = :id",
                         cash=cash - (shares * quote["price"]),
