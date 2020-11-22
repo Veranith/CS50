@@ -57,9 +57,7 @@ def index():
     for stock in stocks:
         stock.update(lookup(stock['symbol']))
         total += (stock['price'] * stock['shares'])
-    
-
-    # return apology("sorry")
+        
     return render_template("index.html", stocks=stocks, cash=usd(cash), total=usd(total))
 
 
@@ -115,7 +113,12 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    return apology("TODO")
+
+    purchases = db.execute("SELECT * FROM transactions "
+                "WHERE user_id = :user_id ORDER BY date DESC;", 
+                user_id=session["user_id"])
+    
+    return render_template("history.html", purchases=purchases)
 
 
 @app.route("/login", methods=["GET", "POST"])
