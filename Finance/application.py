@@ -57,6 +57,7 @@ def index():
     for stock in stocks:
         stock.update(lookup(stock['symbol']))
         total += (stock['price'] * stock['shares'])
+        #stock.update()
         
     return render_template("index.html", stocks=stocks, cash=usd(cash), total=usd(total))
 
@@ -91,7 +92,7 @@ def buy():
         db.execute("INSERT INTO transactions (user_id, symbol, qty, price, date)"
                    "VALUES(:user_id, :symbol, :qty, :price, :date);",
                    user_id=session['user_id'],
-                   symbol=symbol,
+                   symbol=symbol.upper(),
                    qty=shares,
                    price=quote["price"],
                    date=datetime.now()
@@ -106,7 +107,8 @@ def buy():
         return redirect(url_for("index"))
 
     else:
-        return render_template("buy.html")
+        symbol = request.args.get('symbol')
+        return render_template("buy.html", symbol=symbol)
 
 
 @app.route("/history")
@@ -267,7 +269,7 @@ def sell():
         db.execute("INSERT INTO transactions (user_id, symbol, qty, price, date)"
                    "VALUES(:user_id, :symbol, :qty, :price, :date);",
                    user_id=session['user_id'],
-                   symbol=symbol,
+                   symbol=symbol.upper(),
                    qty=(sellShares * -1),
                    price=quote["price"],
                    date=datetime.now()
@@ -283,7 +285,8 @@ def sell():
         return redirect(url_for("index"))
 
     else:
-        return render_template("sell.html")
+        symbol = request.args.get('symbol')
+        return render_template("sell.html", symbol=symbol)
 
 def errorhandler(e):
     """Handle error"""

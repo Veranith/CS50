@@ -13,6 +13,7 @@
                 <th scope="col">Shares</th>
                 <th scope="col">Price</th>
                 <th scope="col">Total</th>
+                <th scope="col">Buy/Sell</th>
             </tr>
         </thead>
         <tbody>
@@ -23,14 +24,14 @@
                 <td>{{ stock["shares"] }}</td>
                 <td>{{ stock["price"] }}</td>
                 <td>{{ stock["price"] * stock["shares"] }}</td>
+                <td><a href="/buy?symbol={{ stock['symbol'] }}">Buy</a> | <a href="/sell?symbol={{ stock['symbol'] }}">Sell</a> </td>
             </tr>
             {% endfor %}
             <tr scope="row">
                 <td>Cash</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="3"></td>
                 <td>{{ cash }}</td>
+                <td></td>
             </tr>
         </tbody>
         <tfoot>
@@ -38,6 +39,7 @@
                 <td colspan="3"></td>
                 <td>Total</td>
                 <td class="bold">{{ total }}</td>
+                <td></td>
             </tr>
         </tfoot>
     </table>
