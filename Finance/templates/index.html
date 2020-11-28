@@ -22,15 +22,15 @@
                 <td>{{ stock["symbol"] }}</td>
                 <td>{{ stock["name"] }}</td>
                 <td>{{ stock["shares"] }}</td>
-                <td>{{ stock["price"] }}</td>
-                <td>{{ stock["price"] * stock["shares"] }}</td>
+                <td>{{ stock["price"]|usd }}</td>
+                <td>{{ (stock["price"] * stock["shares"])|usd }}</td>
                 <td><a href="/buy?symbol={{ stock['symbol'] }}">Buy</a> | <a href="/sell?symbol={{ stock['symbol'] }}">Sell</a> </td>
             </tr>
             {% endfor %}
             <tr scope="row">
                 <td>Cash</td>
                 <td colspan="3"></td>
-                <td>{{ cash }}</td>
+                <td>{{ cash|usd }}</td>
                 <td></td>
             </tr>
         </tbody>
@@ -38,7 +38,7 @@
             <tr class="font-weight-bold">
                 <td colspan="3"></td>
                 <td>Total</td>
-                <td class="bold">{{ total }}</td>
+                <td class="bold">{{ total|usd }}</td>
                 <td></td>
             </tr>
         </tfoot>

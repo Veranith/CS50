@@ -10,8 +10,8 @@
             <tr scope="row">
                 <th scope="col">Symbol</th>
                 <th scope="col">Shares</th>
-                <th scope="col">Purchase Price</th>
-                <th scope="col">Purchase Date</th>
+                <th scope="col">Share Price</th>
+                <th scope="col">Transaction Date</th>
             </tr>
         </thead>
         <tbody>
@@ -19,7 +19,7 @@
             <tr scope="row">
                 <td>{{ purchase["symbol"] }}</td>
                 <td>{{ purchase["qty"] }}</td>
-                <td>{{ purchase["price"] }}</td>
+                <td>{{ purchase["price"]|usd }}</td>
                 <td>{{ purchase["date"] }}</td>
             </tr>
             {% endfor %}

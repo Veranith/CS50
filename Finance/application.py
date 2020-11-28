@@ -11,7 +11,6 @@ from helpers import apology, login_required, lookup, usd    # type: ignore
 
 # Configure application
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '4E3D0C88F9B04938DC89C27C0B4271E53'
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -52,14 +51,13 @@ def index():
                         "WHERE user_id = :user_id GROUP BY symbol ORDER BY symbol;", 
                         user_id=session["user_id"])
     
+    # Loop through all the stocks and add lookup information and calculate total
     total = cash
-    
     for stock in stocks:
         stock.update(lookup(stock['symbol']))
         total += (stock['price'] * stock['shares'])
-        #stock.update()
-        
-    return render_template("index.html", stocks=stocks, cash=usd(cash), total=usd(total))
+    
+    return render_template("index.html", stocks=stocks, cash=cash, total=total)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -77,10 +75,11 @@ def buy():
         if not (isinstance(shares, int) and shares >= 1):
             return apology("must provide a valid quantity of shares to buy", 403)
         
-        quote = lookup(request.form.get("symbol"))
+        quote = lookup(symbol)
         if quote is None:
             return apology("Symbol doesn't exist", 403)
         
+        # Get user cash from DB
         cash = float(db.execute("SELECT * FROM users WHERE id = :id;", 
                                 id=session["user_id"])[0]['cash'])
         
@@ -117,8 +116,8 @@ def history():
     """Show history of transactions"""
 
     purchases = db.execute("SELECT * FROM transactions "
-                "WHERE user_id = :user_id ORDER BY date DESC;", 
-                user_id=session["user_id"])
+                           "WHERE user_id = :user_id ORDER BY date DESC;", 
+                           user_id=session["user_id"])
     
     return render_template("history.html", purchases=purchases)
 
@@ -199,29 +198,28 @@ def register():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
+        formPassword = request.form.get("password")
+        formUsername = request.form.get("username")
+
         # Ensure username was submitted
-        if not request.form.get("username"):
+        if not formUsername:
             return apology("must provide username", 403)
 
         # Ensure password was submitted
-        elif not request.form.get("password"):
+        elif not formPassword:
             return apology("must provide password", 403)
-
-        elif not (request.form.get("password") == request.form.get("confirmation")):
+        elif not (formPassword == request.form.get("confirmation")):
             return apology("passwords do not match", 403)
 
         # Ensure username is not already taken
         elif len(db.execute("SELECT * FROM users WHERE username = :username;",
-                            username=request.form.get("username"))) > 0:
+                            username=formUsername)) > 0:
             return apology("username already taken", 403)
         
         db.execute("INSERT INTO users (username, hash) VALUES(:username,:hash);",
-                   username=request.form.get("username"),
+                   username=formUsername,
                    hash=generate_password_hash(request.form.get("password")))
         
-        # not working, todo
-        flash('Account successfully created!', 'success')
-
         # Redirect user to home page
         return redirect(url_for("login"))
 
@@ -248,10 +246,10 @@ def sell():
 
         # Get and validate shares from DB
         rows = db.execute("SELECT sum(qty) AS shares FROM transactions "
-                        "WHERE user_id = :user_id AND symbol = :symbol GROUP BY symbol;", 
-                        user_id=session["user_id"],
-                        symbol= symbol
-                        )
+                          "WHERE user_id = :user_id AND symbol = :symbol GROUP BY symbol;", 
+                          user_id=session["user_id"],
+                          symbol=symbol
+                          )
         if len(rows) != 1:
             return apology("You don't own this stock.", 403)
         ownedShares = rows[0]['shares']
@@ -288,6 +286,7 @@ def sell():
         symbol = request.args.get('symbol')
         return render_template("sell.html", symbol=symbol)
 
+
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
@@ -299,6 +298,3 @@ def errorhandler(e):
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
 
-
-if __name__ == '__main__':
-    app.run(debug=True) 
