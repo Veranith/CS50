@@ -4,6 +4,8 @@ import urllib.parse
 
 from flask import redirect, render_template, request, session
 from functools import wraps
+from azure.keyvault.secrets import SecretClient
+from azure.identity import DefaultAzureCredential
 
 
 def apology(message, code=400):
@@ -58,6 +60,10 @@ def lookup(symbol):
         return None
 
 
-def usd(value):
-    """Format value as USD."""
-    return f"${value:,.2f}"
+# https://docs.microsoft.com/en-us/azure/key-vault/secrets/quick-create-python?tabs=cmd
+def connectionString(KVName):
+    VaultURI = f"https://{KVName}.vault.azure.net/"
+    credential = DefaultAzureCredential(exclude_shared_token_cache_credential=True)
+    client = SecretClient(vault_url=VaultURI, credential=credential)
+    return client.get_secret('dbConnectionString').value
+    

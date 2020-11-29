@@ -1,4 +1,8 @@
 cs50
+style50
 Flask
 Flask-Session
 requests
+Flask-SQLAlchemy
+azure.keyvault.secrets
+azure.identity

@@ -1,7 +1,0 @@
-cs50
-Flask
-Flask-Session
-requests
-style50
-submit50
-Flask-SQLAlchemy

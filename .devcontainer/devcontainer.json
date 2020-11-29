@@ -12,7 +12,6 @@
 		}
 	},
 	"remoteEnv":{
-		"API_KEY": "pk_a286e981aaa54e4987d28884bd5d647b",
 		"FLASK_APP": "application.py"
 	},
 	//"runArgs": ["--env-file","devcontainer.env"],

@@ -1,3 +1,4 @@
 /.vscode
 /CS50 Workspace.code-workspace
-Finance/__pycache__/
+*/__pycache__/
+requirements.txt
