@@ -27,6 +27,7 @@ def open_azure_db():
         'ssl_verify_cert': True,
         'ssl_ca': get_ssl_cert()
     }
+    
     # Connect via TLSv1.2
     conn = MySQLConnection()
     conn._ssl['version'] = ssl.PROTOCOL_TLSv1_2
