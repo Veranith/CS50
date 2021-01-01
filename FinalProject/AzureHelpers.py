@@ -8,6 +8,17 @@ from mysql.connector.connection import MySQLConnection
 from mysql.connector.constants import ClientFlag
 
 
+# Validate needed Evironment varabiles are present. 
+if not os.environ.get('dbUser'):
+    raise ValueError("Need to define dbUser environment variable")
+if not os.environ.get('dbPassword'):
+    raise ValueError("Need to define dbPassword environment variable")
+if not os.environ.get('dbHost'):
+    raise ValueError("Need to define dbHost environment variable")
+if not os.environ.get('database'):
+    raise ValueError("Need to define database environment variable")
+
+
 def get_ssl_cert():
     """Get path of Azure crt file"""
     current_path = pathlib.Path(__file__).parent
