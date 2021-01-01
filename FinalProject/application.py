@@ -1,13 +1,12 @@
 import os
-from cs50 import SQL
-from flask import Flask, flash, jsonify, redirect, render_template, request, session
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.middleware.proxy_fix import ProxyFix
+from helpers import apology, login_required, getClientInfo, getKitchenMeal # type:ignore
+from AzureAuthHelper import azureLoginHelper, azureAuthorized, REDIRECT_PATH # type:ignore
 
-from helpers import apology, login_required, lookup, connectionString # type: ignore
 
 # Configure application
 app = Flask(__name__)
@@ -23,8 +22,6 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-# Custom filter
-# app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -32,111 +29,89 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Make sure API key is set
-if not os.environ.get("AZURE_KEYVAULT_NAME"):
-    raise RuntimeError("AZURE_KEYVAULT_NAME not set")
+# This section is needed for url_for("foo", _external=True)
+# See also https://flask.palletsprojects.com/en/1.0.x/deploying/wsgi-standalone/#proxy-setups
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-DB_URI = connectionString(os.environ.get("AZURE_KEYVAULT_NAME"))
 
-app.config["SQLALCHEMY_DATABASE_URI"] = DB_URI
-app.config["SQLALCHEMY_ECHO"] = True
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# todo
-# https://docs.sqlalchemy.org/en/14/core/reflection.html 
-# Configure CS50 Library to use SQLite database
-# db = SQL("sqlite:///finance.db")
-db = SQLAlchemy(app)
-
+# Routes
 
 @app.route("/")
 @login_required
 def index():
-    """Show portfolio of stocks"""
-    return apology("TODO")
+    """Main page"""
+    return render_template("home.html", navOpen=True)
 
 
-@app.route("/buy", methods=["GET", "POST"])
+@app.route("/clients", methods=["GET", "POST"])
 @login_required
-def buy():
-    """Buy shares of stock"""
-    return apology("TODO")
+def clients():
+    """Show Client data"""
+
+    if request.method == "POST":
+        clientNumber = request.form.get("clientNumber")
+        if not clientNumber:
+            return apology("must provide a client number", 403)
+        clientInfo = getClientInfo(clientNumber)
+        if len(clientInfo) > 0 and clientInfo != False:
+            return render_template("client.html", clientInfo=clientInfo[0])
+        flash("Client not found.", "warning")
+    return render_template("clientreq.html")
 
 
-@app.route("/history")
+@app.route("/kitchen", methods=["GET", "POST"])
 @login_required
-def history():
-    """Show history of transactions"""
+def kitchen():
+    """Show kitchen meal data"""
+    if request.method == "POST":
+        mealDate = request.form.get("mealDate")
+        if not mealDate:
+            return apology("must provide a meal date", 403)
+        clientMeals = getKitchenMeal(mealDate)
+        if len(clientMeals) > 0:
+            return render_template("kitchen.html", clientMeals=clientMeals)
+        flash("Meals not found for this date.", "warning")
+    
+    return render_template("kitchenreq.html")
+
+
+@app.route("/routes", methods=["GET", "POST"])
+@login_required
+def routes():
+    """Display Routes"""
     return apology("TODO")
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/tools", methods=["GET", "POST"])
+@login_required
+def tools():
+    """MoW Tools"""
+    # navOpen=True
+    return apology("TODO")
+
+
+@app.route("/login", methods=["GET"])
 def login():
     """Log user in"""
-    return apology("TODO")
+    return azureLoginHelper()
 
-#     # Forget any user_id
-#     session.clear()
 
-#     # User reached route via POST (as by submitting a form via POST)
-#     if request.method == "POST":
+@app.route(REDIRECT_PATH)
+def authorized():
+    """Is Authorized from Azure AD?"""
+    
+    azureAuthorized()
 
-#         # Ensure username was submitted
-#         if not request.form.get("username"):
-#             return apology("must provide username", 403)
-
-#         # Ensure password was submitted
-#         elif not request.form.get("password"):
-#             return apology("must provide password", 403)
-
-#         # Query database for username
-#         rows = db.execute("SELECT * FROM users WHERE username = :username",
-#                           username=request.form.get("username"))
-
-#         # Ensure username exists and password is correct
-#         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-#             return apology("invalid username and/or password", 403)
-
-#         # Remember which user has logged in
-#         session["user_id"] = rows[0]["id"]
-
-#         # Redirect user to home page
-#         return redirect("/")
-
-#     # User reached route via GET (as by clicking a link or via redirect)
-#     else:
-        # return render_template("login.html")
+    return redirect(url_for("index"))
 
 
 @app.route("/logout")
 def logout():
     """Log user out"""
-
-    # Forget any user_id
+    
+    # Forget any user session
     session.clear()
-
-    # Redirect user to login form
-    return redirect("/")
-
-
-@app.route("/quote", methods=["GET", "POST"])
-@login_required
-def quote():
-    """Get stock quote."""
-    return apology("TODO")
-
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    """Register user"""
-    return apology("TODO")
-
-
-@app.route("/sell", methods=["GET", "POST"])
-@login_required
-def sell():
-    """Sell shares of stock"""
-    return apology("TODO")
+    return redirect(url_for("index"))
 
 
 def errorhandler(e):
@@ -149,3 +124,4 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
