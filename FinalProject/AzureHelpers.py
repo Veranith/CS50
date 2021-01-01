@@ -7,6 +7,7 @@ from mysql.connector import errorcode
 from mysql.connector.connection import MySQLConnection
 from mysql.connector.constants import ClientFlag
 
+
 def get_ssl_cert():
     """Get path of Azure crt file"""
     current_path = pathlib.Path(__file__).parent
@@ -45,10 +46,10 @@ def open_azure_db():
 
     return conn, cursor
 
+
 def close_azure_db(conn, cursor):
     """Close Azure DB connection"""
     cursor.close()
     conn.close()
     logging.info("Closed DB")
-
 
