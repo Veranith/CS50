@@ -1,6 +1,7 @@
 .sidenav {
     height: 100%;
-    width: 15%;
+    width: 0;
+    left: 0%;
     position: absolute;
     background-color: rgb(38, 41, 96);
     overflow-x: hidden;
@@ -19,7 +20,7 @@
 
 
 #rightMain {
-    margin-left: 15%;
+    margin-left: 0;
 }
 
 /* https://www.w3schools.com/howto/howto_css_button_on_image.asp */
