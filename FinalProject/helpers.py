@@ -1,6 +1,6 @@
 from flask import redirect, render_template, session
 from functools import wraps
-
+from AzureHelpers import open_azure_db, close_azure_db # type:ignore
 
 def apology(message, code=400):
     """Render message as an apology to user."""
@@ -29,4 +29,32 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
+
+def getClientInfo(clientNumber):
+    """Get client info from Azure Mysql DB"""
+    sql = "SELECT * FROM appClientInfo WHERE clientNumber = %s LIMIT 1"
+    values = (clientNumber,)
+    return sqlQuery(sql, values)
+
+
+def getKitchenMeal(mealDate):
+    """Get client info from Azure Mysql DB"""
+
+    sql = 'SELECT * FROM routesheetweek '\
+          'WHERE MealDate = %s AND MealType = "Hot Meal" '\
+          'ORDER BY RouteName ASC, RouteOrder'
+    values = (mealDate,)    
+    return sqlQuery(sql, values)
+
+
+def sqlQuery(SQL, values):
+    """Run Queries on Azure Mysql DB"""
+    db, cursor = open_azure_db()
+    cursor.execute(SQL, values)
+    dbResult = cursor.fetchall()
+    close_azure_db(db, cursor)
+    if dbResult is None:
+        return False
+    return dbResult
 

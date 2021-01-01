@@ -1,0 +1,19 @@
+CREATE VIEW `appClientInfo` AS 
+SELECT client.ClientId, 
+ClientNumber, 
+FirstName, 
+LastName, 
+Address, 
+Phone, 
+dt.name AS Diet, 
+DATE_FORMAT(Birthdate, '%Y-%m-%d') as Birthdate, 
+st.name AS Status, 
+Preferences, 
+deliveryInstructions
+FROM client 
+LEFT JOIN (SELECT ClientId, group_concat(Preference separator ', ') AS Preferences FROM clientpreference GROUP BY ClientId) cp
+ON client.ClientId = cp.ClientId
+LEFT JOIN (SELECT ClientId, group_concat(Instruction separator ', ') AS deliveryInstructions FROM deliveryinstruction GROUP BY ClientId) di
+ON client.ClientId = di.ClientId
+LEFT JOIN fieldvalues dt on dt.Id = client.Diet
+LEFT JOIN fieldvalues st on st.Id = client.StatusId

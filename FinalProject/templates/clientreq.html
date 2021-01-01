@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Client Info
+{% endblock %}
+
+{% block main %}
+<div class="row justify-content-center">
+    <form action="/clients" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="clientNumber" placeholder="Client Number" type="number" min=1 step=1>
+        </div>
+        <button class="btn btn-primary" type="submit">Get Client Info</button>
+    </form>
+</div>
+{% endblock %}

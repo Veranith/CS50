@@ -10,31 +10,39 @@
             <tbody>
                 <tr>
                     <th>Name</th>
-                    <td>Flintstone, Fred</td>
+                    <td>{{ clientInfo['LastName'] }}, {{ clientInfo['FirstName'] }}</td>
                 </tr>
                 <tr>
                     <th>Client #</th>
-                    <td>123</td>
+                    <td>{{ clientInfo['ClientNumber'] }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ clientInfo['Status'] }}</td>
                 </tr>
                 <tr>
                     <th>Address</th>
-                    <td>345 Cave Stone Road</td>
+                    <td>{{ clientInfo['Address'] }}</td>
                 </tr>
                 <tr>
                     <th>Phone</th>
-                    <td>555-555-0001</td>
+                    <td>{{ clientInfo['Phone'] }}</td>
+                </tr>
+                <tr>
+                    <th>Birthdate</th>
+                    <td>{{ clientInfo['Birthdate'] }}</td>
                 </tr>
                 <tr>
                     <th>Diet</th>
-                    <td>DIAB</td>
+                    <td>{{ clientInfo['Diet'] }}</td>
                 </tr>
                 <tr>
                     <th>Delivery Instructions</th>
-                    <td>Dog is very friendly</td>
+                    <td>{{ clientInfo['deliveryInstructions'] }}</td>
                 </tr>
                 <tr>
                     <th>Kitchen Instructions</th>
-                    <td>LARGE PROTEIN PORTION, NO ORANGE JUICE</td>
+                    <td>{{ clientInfo['Preferences'] }}</td>
                 </tr>
             </tbody>
         </table>    
