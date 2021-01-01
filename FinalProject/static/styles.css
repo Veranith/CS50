@@ -43,3 +43,15 @@
     font-size: xx-large;
     border: none;
 }
+
+.myHeader .logoutButton {
+    position: absolute;
+    left: 90%;
+    top: 50%;
+    transform: translate(0, -50%);
+    background-color: rgb(38, 41, 96);
+    width: 10%;
+    height: 100%;
+    font-size: xx-large;
+    border: none;
+}
