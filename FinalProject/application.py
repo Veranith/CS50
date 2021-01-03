@@ -1,5 +1,7 @@
 import os
 import logging
+import requests
+from requests import status_codes
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
 from tempfile import mkdtemp
@@ -108,12 +110,69 @@ def routes():
     return render_template("routereq.html", routeNames=routeNames)
 
 
-@app.route("/tools", methods=["GET", "POST"])
+@app.route("/tools")
 @login_required
 def tools():
     """MoW Tools"""
-    # navOpen=True
-    return apology("TODO")
+
+    return render_template("tools.html")
+
+
+@app.route("/addclientmeal", methods=["GET", "POST"])
+# @login_required
+def addClientMeal():
+    """MoW Add Single Client Weekly Meals"""
+
+    if request.method == "POST":
+        # Validate required args are present
+
+        startDate = request.form.get("startDate")
+        if not startDate:
+            flash("Must select a start date.", "warning")
+            return redirect(url_for("addClientMeal"))
+
+        # If clientId is present, then the information has been validated and we can call the API to generate the new meals
+        clientId = request.form.get("clientId")
+        if clientId:
+            print("client id:", clientId)
+            print("start:", startDate)
+
+        # TODO process completed request
+
+        clientNumber = request.form.get("clientNumber")
+        if not clientNumber:
+            flash("Must enter a client number", "warning")
+            return redirect(url_for("addClientMeal"))
+
+        # Get needed info for API from environment
+        fKey =  os.environ.get("addClientMealsFKey")
+        fAppURL = os.environ.get("addClientMealsURL")
+    
+        if (fKey is None) or (fAppURL is None):
+            raise ValueError("Need to define addClientMealsFKey and addClientMealsURI environment variables")
+        
+        logging.info(f"Requesting client info for client number {clientNumber} from addClientMeal API.")
+        result = requests.get(f"{fAppURL}api/AddClientMeal?code={fKey}&clientNumber={clientNumber}")
+        logging.info(f"Request status code {result.status_code}.")
+
+        if result.status_code == 204:
+            flash("Client not found.", "warning")
+            return redirect(url_for("addClientMeal"))
+
+        if result.status_code == 200:
+            clientInfo = result.json()
+            print("Info:", clientInfo)
+            return render_template("addclientmealverify.html", clientInfo=clientInfo, startDate=startDate)
+
+        else:
+            flash("addCLientMeal API call failed.", "warning")
+        
+        # if len(routeData) > 0:
+        #     return render_template("route.html", routeNames=routeNames, routeData=routeData)
+        # flash("Meals not found for this route.", "warning")
+
+    return render_template("addclientmealreq.html")
+
 
 
 @app.route("/login", methods=["GET"])

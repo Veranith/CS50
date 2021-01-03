@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add Client Meals
+{% endblock %}
+
+{% block main %}
+<div class="row justify-content-center mb-3">
+    <h2> Generate Meals </h2>
+</div>
+<div class="row justify-content-center">
+    <form action="{{ url_for('addClientMeal') }}" method="post">
+        <div>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ clientInfo['LastName'] }}, {{ clientInfo['FirstName'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Client #</th>
+                        <td>{{ clientInfo['ClientNumber'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Birthdate</th>
+                        <td>{{ clientInfo['Birthdate'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            {% if clientInfo['StatusId'] == 1 %}
+                                Active
+                            {% else %}
+                                Inactive
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Start Date</th>
+                        <td>
+                            {{ startDate }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>    
+        </div>
+        <div class="row">
+            <strong class="text-danger">Please validate all the client information is correct before proceeding</strong>
+        </div>
+        <div class="row justify-content-center mt-3">
+            <input type="hidden" name="startDate" value="{{ startDate }}">
+            <input type="hidden" name="clientId" value="{{ clientInfo['ClientId'] }}"">
+            <button class="btn btn-primary" type="submit">Generate Meals</button>
+            <a href="{{ url_for('addClientMeal') }}" role="button" class="btn btn-danger">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
