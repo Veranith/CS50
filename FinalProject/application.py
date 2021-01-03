@@ -119,7 +119,7 @@ def tools():
 
 
 @app.route("/addclientmeal", methods=["GET", "POST"])
-# @login_required
+@login_required
 def addClientMeal():
     """MoW Add Single Client Weekly Meals"""
 
