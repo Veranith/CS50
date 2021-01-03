@@ -124,8 +124,15 @@ def addClientMeal():
     """MoW Add Single Client Weekly Meals"""
 
     if request.method == "POST":
-        # Validate required args are present
+        # Get needed info for API from environment
+        fKey = os.environ.get("addClientMealsFKey")
+        fAppURL = os.environ.get("addClientMealsURL")
+    
+        if (fKey is None) or (fAppURL is None):
+            raise ValueError("Need to define addClientMealsFKey and addClientMealsURI environment variables")
+        params = {"code": fKey}
 
+        # Validate required args are present
         startDate = request.form.get("startDate")
         if not startDate:
             flash("Must select a start date.", "warning")
@@ -134,25 +141,32 @@ def addClientMeal():
         # If clientId is present, then the information has been validated and we can call the API to generate the new meals
         clientId = request.form.get("clientId")
         if clientId:
-            print("client id:", clientId)
-            print("start:", startDate)
+            params['clientId'] = clientId
+            params['startDate'] = startDate
 
-        # TODO process completed request
+            result = requests.get(fAppURL, params)
 
+            if result.status_code == 200:
+                resultStr = result.content.decode("utf-8")
+                if "inserted" in resultStr:
+                    flash(resultStr, "success")
+                else:
+                    flash(resultStr, "danger")
+                return render_template("addclientmealreq.html")
+
+            else:
+                flash("addCLientMeal API call failed.", "warning")
+                return render_template("addclientmealreq.html")
+    
+        # If clientNumber is present, get client info and validate with user
         clientNumber = request.form.get("clientNumber")
         if not clientNumber:
             flash("Must enter a client number", "warning")
             return redirect(url_for("addClientMeal"))
 
-        # Get needed info for API from environment
-        fKey =  os.environ.get("addClientMealsFKey")
-        fAppURL = os.environ.get("addClientMealsURL")
-    
-        if (fKey is None) or (fAppURL is None):
-            raise ValueError("Need to define addClientMealsFKey and addClientMealsURI environment variables")
-        
+        params['clientNumber'] = clientNumber
         logging.info(f"Requesting client info for client number {clientNumber} from addClientMeal API.")
-        result = requests.get(f"{fAppURL}api/AddClientMeal?code={fKey}&clientNumber={clientNumber}")
+        result = requests.get(fAppURL, params=params)
         logging.info(f"Request status code {result.status_code}.")
 
         if result.status_code == 204:
@@ -161,18 +175,12 @@ def addClientMeal():
 
         if result.status_code == 200:
             clientInfo = result.json()
-            print("Info:", clientInfo)
             return render_template("addclientmealverify.html", clientInfo=clientInfo, startDate=startDate)
 
         else:
             flash("addCLientMeal API call failed.", "warning")
-        
-        # if len(routeData) > 0:
-        #     return render_template("route.html", routeNames=routeNames, routeData=routeData)
-        # flash("Meals not found for this route.", "warning")
 
     return render_template("addclientmealreq.html")
-
 
 
 @app.route("/login", methods=["GET"])
