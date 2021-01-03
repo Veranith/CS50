@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Client Info
+{% endblock %}
+
+{% block main %}
+<div class="row justify-content-center">
+    <form action="/routes" method="post">
+        <div class="form-inline">
+            <label class="mr-3" for="route">Select route:</label>
+            <select autofocus class="form-control mr-3" name="route">
+                {% for route in routeNames %}
+                    <option>{{ route['RouteName'] }}</option>
+                {% endfor %}
+            </select>
+            <label class="mr-3" for="mealDate">Date:</label>
+            <input autocomplete="off" autofocus class="form-control mr-3" name="mealDate" type="date">
+            <button class="btn btn-primary" type="submit">Get Route</button>
+        </div>
+        
+    </form>
+</div>
+{% endblock %}

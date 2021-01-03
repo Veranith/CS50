@@ -1,6 +1,9 @@
+from typing import final
 from flask import redirect, render_template, session
 from functools import wraps
 from AzureHelpers import open_azure_db, close_azure_db # type:ignore
+import logging
+
 
 def apology(message, code=400):
     """Render message as an apology to user."""
@@ -48,12 +51,39 @@ def getKitchenMeal(mealDate):
     return sqlQuery(sql, values)
 
 
-def sqlQuery(SQL, values):
+def getRouteNames():
+    """Get list of routes"""
+
+    sql = 'SELECT RouteName FROM routesheetweek '\
+          'GROUP BY RouteName ORDER BY RouteName'
+    return sqlQuery(sql)
+
+
+def getRouteData(routeName, mealDate):
+    """Get list of routes"""
+
+    sql = 'SELECT DISTINCT LastName, FirstName, RouteName, RouteOrder, Address, Phone, '\
+          'DietName, HighlightInstruction, Instruction, TotalHotMeal, TotalFrozenMeal '\
+          'FROM routesheetweek WHERE RouteName = %s and MealDate = %s '\
+          'ORDER BY RouteName, RouteOrder'
+    values = (routeName, mealDate)
+    return sqlQuery(sql, values)
+
+
+def sqlQuery(SQL, values=None):
     """Run Queries on Azure Mysql DB"""
+    
     db, cursor = open_azure_db()
-    cursor.execute(SQL, values)
-    dbResult = cursor.fetchall()
-    close_azure_db(db, cursor)
+    
+    try:
+        logging.info(f"Query: {SQL}")
+        logging.info(f"Values: {values}")
+        cursor.execute(SQL, values)
+        dbResult = cursor.fetchall()
+        logging.info(f"Fetched {len(dbResult)} rows.")
+    finally:
+        close_azure_db(db, cursor)
+    
     if dbResult is None:
         return False
     return dbResult
