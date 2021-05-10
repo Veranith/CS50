@@ -13,12 +13,12 @@ The tools functionality of this app was added to the existing app using an Azure
 One of my largest challenges with this project was finding the correct modules to allow me to connect to an Azure MySQL database. I had tried many different ones and formats until I found a combination that worked. I then moved these into the AzureHelpers.py file so I could reuse them as needed and ensure that I would not have to recreate this work.
 
 Summary of files:
-Static: This folder holds all the static parts of the website.
-Templates: This folder contains all the templates to generate the webpages through the flask framework.
-AzureAuthHelpers.py: This file contains functions to help with authentication to Azure.
-AzureHelpers.py: This file contains functions to help with communications with the Azure DB.
-BaltimoreCyberTrustRoot.crt.pem: This is the certificate file needed to authenticate with Azure.
-application.py: This is the initial python file which holds the flask code to run this tool.
-helpers.py: This file holds all the custom functions used within this app.
-requirements.txt: This file includes a list of all the Python modules needed to run this app.
+Static: This folder holds all the static parts of the website.  
+Templates: This folder contains all the templates to generate the webpages through the flask framework.  
+AzureAuthHelpers.py: This file contains functions to help with authentication to Azure.  
+AzureHelpers.py: This file contains functions to help with communications with the Azure DB.  
+BaltimoreCyberTrustRoot.crt.pem: This is the certificate file needed to authenticate with Azure.  
+application.py: This is the initial python file which holds the flask code to run this tool.  
+helpers.py: This file holds all the custom functions used within this app.  
+requirements.txt: This file includes a list of all the Python modules needed to run this app.  
 
