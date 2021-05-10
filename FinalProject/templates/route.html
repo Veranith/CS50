@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Client Info
+{% endblock %}
+
+{% block main %}
+<div class="row justify-content-center">
+    <form action="/routes" method="post">
+        <div class="form-inline">
+            <label class="mr-3" for="route">Select route:</label>
+            <select autofocus class="form-control mr-3" name="route">
+                {% for route in routeNames %}
+                    <option>{{ route['RouteName'] }}</option>
+                {% endfor %}
+            </select>
+            <label class="mr-3" for="mealDate">Date:</label>
+            <input autocomplete="off" autofocus class="form-control mr-3" name="mealDate" type="date">
+            <button class="btn btn-primary" type="submit">Get Route</button>
+        </div>
+        
+    </form>
+</div>
+<div class="row">
+    <div class="mx-5 my-4">
+        <table class="table table-bordered ">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Diet</th>
+                    <th scope="col">Route</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in routeData %}
+                <tr>
+                    <td rowspan=2>{{ client['LastName'] }}, {{ client['FirstName'] }}</td>
+                    <td>{{ client['Address'] }}</td>
+                    <td>{{ client['Phone'] }}</td>
+                    <td>{{ client['DietName'] }}</td>
+                    <td>{{ client['RouteName'] }} - {{ client['RouteOrder'] }}</td>
+                </tr>
+                <tr>
+                    <td colspan=4>
+                        {% if client['HighlightInstruction'] %}
+                            <strong>
+                                {{ client['HighlightInstruction'] }}
+                            </strong>
+                            {% if client['Instruction'] %}
+                            , 
+                            {% endif %}
+                        {% endif %}
+                        {{ client['Instruction'] }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+style50
+Flask
+Flask-Session
+requests
+python-dotenv
+mysql.connector-python
+msal

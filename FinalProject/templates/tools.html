@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Client Info
+{% endblock %}
+
+{% block main %}
+<div class="row justify-content-center">
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>
+                    <a href="{{ url_for('addClientMeal') }}" role="button" class="btn btn-primary btn-block">Generate Weekly Meals for a Client</button>
+                </td>
+                <td class="text-center align-middle">
+                    Generate new weekly meals for a single client and set their status to active
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#" role="button" class="btn btn-primary btn-block">Remove Weekly Meals for a Client</button>
+                </td>
+                <td class="text-center align-middle">
+                    Remove weekly meals for a client and set their status to inactive
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#" role="button" class="btn btn-primary btn-block">Set holiday</button>
+                </td>
+                <td class="text-center align-middle">
+                    Set meal counts for all active clients for a holiday.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <div class="row justify-content-center">
+        <h1 class="text-center">Meals on Wheels Reports</h1>
+        <table class="table table-bordered col-8 my-4">
+            <tbody>
+                <tr>
+                    <th>Clients</th>
+                    <td>Used to view infomation on a client</td>
+                </tr>
+                <tr>
+                    <th>Kitchen</th>
+                    <td>Displays the kitchen report used to prepare specific meals for each client</td>
+                </tr>
+                <tr>
+                    <th>Routes</th>
+                    <td>Displays the infromation needed by drivers to deliver means for each route</td>
+                </tr>
+                <tr>
+                    <th>Tools</th>
+                    <td>Tools useful for modifying meal information</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

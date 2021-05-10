@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{url_for('static', filename='styles.css')}}" rel="stylesheet">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+{% if navOpen %}
+    <body onload="openNav()">
+{% else %}
+    <body>
+{% endif %}
+    <!-- Header -->
+    <!-- https://www.w3schools.com/howto/howto_css_button_on_image.asp -->
+    <header class="myHeader">
+        <div><img src="static/headerD2.jpg" class="img-fluid" alt="Meals on Wheels"></div>
+        {% if session.user %}
+            <button id="menuButton" type="button" class="btn btn-primary menuButton shadow-none" onclick="toggleNav()">&#9776;</button>
+            <a class="btn btn-primary logoutButton shadow-none" href="{{url_for('logout')}}">Logout</a>
+        {% endif %}
+    </header>
+
+    <main class="container">
+        <div class="row">
+            <!-- Left side menu -->
+            <!-- https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+            {% if session.user %}
+                <div id="sideMenu" class="sidenav">
+                    <a href="{{url_for('index')}}">Main</a>
+                    <a href="{{url_for('clients')}}">Clients</a>
+                    <a href="{{url_for('kitchen')}}">Kitchen</a>
+                    <a href="{{url_for('routes')}}">Routes</a>
+                    <a href="{{url_for('tools')}}">Tools</a>
+                </div> 
+            {% endif %}
+            <!-- Right side main -->
+            <div id="rightMain" class="col-12">
+                {% if get_flashed_messages(with_categoriTrue) %}
+                <header>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} border text-center" role="alert">
+                                {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </header>
+                {% endif %}
+                <!-- Main area -->
+                <main class="container p-5 col-12">
+                    {% block main %}{% endblock %}
+                </main>
+            </div>
+        </div>
+    </main>
+    
+<script src="{{url_for('static', filename='scripts.js')}}"></script>
+
+</body>
+</html>

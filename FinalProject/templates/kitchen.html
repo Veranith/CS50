@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Client Info
+{% endblock %}
+
+{% block main %}
+<div class="row justify-content-center col-12">
+    <table class="table table-bordered col-12">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Diet</th>
+                <th scope="col">Beverage</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Route</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clientMeals %}
+            <tr>
+                <td rowspan="2">{{ client['LastName'] }}, {{ client['FirstName'] }}</td>
+                <td>{{ client['DietName'] }}</td>
+                <td>{{ client['BeverageTypeName'] }}</td>
+                <td>{{ client['MaxMeal'] }}</td>
+                <td>{{ client['RouteName'] }} - {{ client['RouteOrder'] }}</td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    {% if client['HighlightPreference'] %}
+                    <strong>{{ client['HighlightPreference'] }}</strong>
+                        {% if client['Preference'] %}
+                        ,
+                        {% endif %}    
+                    {% endif %}
+                    {% if client['Preference'] %}
+                        {{ client['Preference'] }}
+                    {% endif %}
+                </td>  
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        
+</div>
+{% endblock %}
